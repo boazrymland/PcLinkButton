@@ -1,0 +1,10 @@
+*~
+assets/*
+!assets/.gitignore
+resources/*
+!resources/.gitignore
+protected/runtime/*
+!protected/runtime/.gitignore
+protected/data/*
+.htpasswd
+.idea
