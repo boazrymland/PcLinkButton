@@ -61,6 +61,21 @@ class PcLinkButton extends CGridColumn {
 	public $linkHtmlOptions = array();
 
 	/**
+	 * @var boolean whether the column is sortable. If so, the header cell will contain a link that may trigger the sorting.
+	 * Defaults to true. Note that if 'name' is not set, or if 'name' is not allowed by 'CSort', this property will be
+	 * treated as false.
+	 * @see name
+	 */
+	public $sortable = true;
+
+	/**
+	 * @var string the attribute name of the data model. Used for column sorting, filtering and to render the corresponding
+	 * attribute value in each data cell.
+	 * @see sortable
+	 */
+	public $name;
+
+	/**
 	 * Renders the data cell content.
 	 * This method renders a hyperlink in the data cell.
 	 * @param integer $row the row number (zero-based)
@@ -87,6 +102,29 @@ class PcLinkButton extends CGridColumn {
 		}
 		else {
 			echo CHtml::link($label, $url, $options);
+		}
+	}
+
+	/**
+	 * Renders the header cell content.
+	 * This method will render a link that can trigger the sorting if the column is sortable.
+	 */
+	protected function renderHeaderCellContent() {
+		if ($this->grid->enableSorting && $this->sortable && $this->name !== null) {
+			echo $this->grid->dataProvider->getSort()->link($this->name, $this->header);
+		}
+		else if ($this->name !== null && $this->header === null) {
+			if ($this->grid->dataProvider instanceof CActiveDataProvider) {
+				echo CHtml::encode($this->grid->dataProvider->model->getAttributeLabel($this->name));
+			}
+			else {
+				echo CHtml::encode($this->name);
+			}
+
+		}
+
+		else {
+			parent::renderHeaderCellContent();
 		}
 	}
 }
